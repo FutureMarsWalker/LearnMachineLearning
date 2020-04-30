@@ -1,4 +1,10 @@
-package com;
+/**
+ * Write a description of class Game here.
+ *
+ * @author Eli Exner and Troy Czapar
+ * @version 4/30/20
+ */
+ 
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.GridLayout;
@@ -10,23 +16,19 @@ public class Game
     
     //Graphics
    private JFrame f = new JFrame();
-
    private ImageIcon imgO = new ImageIcon("O.png");
    private ImageIcon imgX = new ImageIcon("X.png");
-
-   private JButton[] buttons = new JButton[9];
-        
+   private JButton[] buttons = new JButton[9];      
    private boolean waitingForButton = false;
    private int buttonReturned = -1;
         
-    public String theBoard()
+    public String emptyBoard()
     {
         return "123456789";
     }
     
-    public String xPlays(String bd, int x)
+    public String xPlays(String b, int x)
     {
-    	String b = bd;
         try 
         {
             b = b.substring(0, x - 1) + "x" + b.substring(x);
@@ -37,9 +39,8 @@ public class Game
         }
         return b;
     }
-    public String oPlays(String bd, int x)
+    public String oPlays(String b, int x)
     {
-        String b = bd;
         try 
         {
             b = b.substring(0, x - 1) + "o" + b.substring(x);
@@ -52,7 +53,7 @@ public class Game
     }
     
     /* printGame
-     * This is the most important method. It shows the actual game board.
+     * This is the most important method. It shows the actual game board and waits for a response.
      */
     public void printGame(String bd)
     {
@@ -176,8 +177,12 @@ public class Game
             });
         f.setLayout(new GridLayout(3,3));
         f.setBounds(0, 0, 500, 500);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
     }
+    /* printChances
+     *  This is never called, but if you uncomment some code in Brutus.java you can see it work.
+     */
     public void printChances(String bd)
     {
         String b = bd;
@@ -214,4 +219,8 @@ public class Game
         }
         return str;
     }  
+    public void gameOver()
+    {
+    	f.dispose();
+    }
 }

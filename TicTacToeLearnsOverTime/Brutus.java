@@ -1,13 +1,17 @@
-package com;
 
+/**
+ * Brutus
+ *    The Machine Learning that saves and learns from its experiences
+ * @author Eli Exner
+ * @version The seemingly billionth version
+ */
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 public class Brutus
 {
-    @SuppressWarnings("unused")
-	private Game board = new Game();
+
 	
     private ArrayList<String> thisGameInput;
     private ArrayList<Integer> thisGameOutput;
@@ -46,7 +50,7 @@ public class Brutus
     public int move(String bd, boolean isX)//bd is for board
     {
         if (isObserver) {
-        //chance of choosing: 0=no chance, 1=not prefered, 2=neutral, 3=good
+        //chance of choosing: 0=no chance, 1=not preferred, 2=neutral, 3=good
         int[] chanceOfChoosing = new int[9];
         
         //if the space is full, set the chance of choosing it to -1
@@ -99,34 +103,46 @@ public class Brutus
         {
             order = getRandomOrder();
         }
-        //NEW nested for loop
-        for (int j = 7; j >= 0; j--)
+
+        //starting at the highest success level, check if
+        //it is possible to make such a successful move. If so, do it.
+        
+        for (int j = 7; j >= 0; j--)//7 is the maximum success level
         {
             for (int i = 0; i < chanceOfChoosing.length; i++)
             {
                 if (chanceOfChoosing[order[i]] == j)
                 {
+                	//add the move to memory
                     thisGameInput.add(bd);
                     thisGameOutput.add(order[i]);
+                    //make the move
                     return order[i] + 1;
                 }
             }
         }
 
-        System.out.println("ERROR");
+        System.err.println("ERROR: Brutus was told to move but there are no possible moves");
         return -1;
     } else {
-        System.out.println("ERROR: Brutus cannot move because it is an observer");
+        System.err.println("ERROR: Brutus cannot move because it is an observer");
         return -1;
     }
     }
 
+    /* observe
+     * This is called in GameRunner when a human moves
+     * It lets the AI learn from your mistakes.
+     */
     public void observe(String board, int move)
     {
         thisGameInput.add(board);
-        thisGameOutput.add(move);
+        thisGameOutput.add(move - 1);
     }
 
+    /* learn
+     * GameRunner calls this method after every game
+     */
     public void learn(int results)
     {
         for (int i = 0; i < thisGameInput.size(); i++)
@@ -199,8 +215,9 @@ public class Brutus
             cleanMemory();
         } catch (java.io.FileNotFoundException e)
         {
-            System.out.println("Someone deleted the save files. They should be named:");
+            System.out.println("Someone deleted or misplaced the save files. They should be named:");
             System.out.println("brutusFailInput.txt, brutusFailOutput.txt, brutusWinOutput.txt, brutusWinInput.txt");
+            System.out.println("Make sure the save files are in the same folder as the project.");
         }
     }
     
@@ -268,14 +285,7 @@ public class Brutus
         }
         return randomOrder;
     }
-    /* addOpponentMoveToMemory
-     * 
-     */
-    public void addOpponentMoveToMemory(String board, int reaction)
-    {
-        thisGameInput.add(board);
-        thisGameOutput.add(reaction);
-    }
-    
 }
+
+
 
